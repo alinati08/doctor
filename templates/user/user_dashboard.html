@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}داشبورد کاربر{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">داشبورد کاربر</h2>
+<a href="{% url 'create_appointment' %}" class="btn btn-success">رزرو نوبت جدید</a>
+<a href="{% url 'my_appointments' %}" class="btn btn-outline-primary">مشاهده نوبت‌های من</a>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}نوبت‌های من{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">نوبت‌ها</h3>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>پزشک/بیمار</th>
+            <th>تاریخ</th>
+            <th>ساعت</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in appointments %}
+        <tr>
+            <td>
+                {% if user.role == 'user' %}
+                    {{ app.doctor.full_name }}
+                {% else %}
+                    {{ app.patient.full_name }}
+                {% endif %}
+            </td>
+            <td>{{ app.date }}</td>
+            <td>{{ app.time }}</td>
+            <td>
+                {% if app.status == 'pending' %}<span class="text-warning">در انتظار</span>
+                {% elif app.status == 'confirmed' %}<span class="text-success">تأیید شده</span>
+                {% else %}<span class="text-danger">رد شده</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if user.role == 'doctor' and app.status == 'pending' %}
+                    <a href="{% url 'confirm_appointment' app.id %}" class="btn btn-sm btn-success">تأیید</a>
+                    <a href="{% url 'reject_appointment' app.id %}" class="btn btn-sm btn-danger">رد</a>
+                {% else %}
+                    ---
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">هیچ نوبتی ثبت نشده است.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

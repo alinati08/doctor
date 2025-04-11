@@ -19,7 +19,7 @@ def create_appointment(request):
             return redirect('my_appointments')
     else:
         form = AppointmentForm()
-    return render(request, 'appointments/create_appointment.html', {'form': form})
+    return render(request, 'reservation/create_appointment.html', {'form': form})
 
 @login_required
 def my_appointments(request):
@@ -29,7 +29,7 @@ def my_appointments(request):
         appointments = Appointment.objects.filter(doctor=request.user)
     else:
         appointments = []
-    return render(request, 'appointments/my_appointments.html', {'appointments': appointments})
+    return render(request, 'reservation/my_appointments.html', {'appointments': appointments})
 
 @login_required
 def update_appointment_status(request, appointment_id, action):
