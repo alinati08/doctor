@@ -15,7 +15,7 @@ def register_user(request):
             return redirect('login')
     else:
         form = UserRegisterForm()
-    return render(request, 'accounts/register_user.html', {'form': form})
+    return render(request, 'user/register_user.html', {'form': form})
 
 def register_doctor(request):
     if request.method == 'POST':
@@ -28,7 +28,7 @@ def register_doctor(request):
             return redirect('login')
     else:
         form = DoctorRegisterForm()
-    return render(request, 'accounts/register_doctor.html', {'form': form})
+    return render(request, 'user/register_doctor.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -42,15 +42,15 @@ def login_view(request):
                 return redirect('doctor_dashboard')
     else:
         form = LoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'user/login.html', {'form': form})
 
 @login_required
 def user_dashboard(request):
-    return render(request, 'accounts/user_dashboard.html')
+    return render(request, 'user/user_dashboard.html')
 
 @login_required
 def doctor_dashboard(request):
-    return render(request, 'accounts/doctor_dashboard.html')
+    return render(request, 'user/doctor_dashboard.html')
 
 def logout_view(request):
     logout(request)
