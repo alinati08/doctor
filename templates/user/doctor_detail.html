@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}پروفایل پزشک{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{{ doctor.full_name }}</h2>
+<p><strong>تخصص:</strong> {{ doctor.specialty }}</p>
+<p><strong>شماره نظام پزشکی:</strong> {{ doctor.medical_license }}</p>
+<p><strong>ایمیل:</strong> {{ doctor.email }}</p>
+
+<hr>
+
+<h4 class="mt-4">زمان‌های کاری پزشک</h4>
+<ul class="list-group mb-4">
+  {% for time in availabilities %}
+    <li class="list-group-item">
+      {{ time.day_of_week }} | از {{ time.start_time|time:"H:i" }} تا {{ time.end_time|time:"H:i" }}
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted">زمان کاری ثبت نشده است.</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'create_appointment' %}?doctor_id={{ doctor.id }}" class="btn btn-success">رزرو نوبت با این پزشک</a>
+{% endblock %}

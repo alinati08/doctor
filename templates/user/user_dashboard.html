@@ -3,6 +3,12 @@
 
 {% block content %}
 <h2 class="mb-4">داشبورد کاربر</h2>
-<a href="{% url 'create_appointment' %}" class="btn btn-success">رزرو نوبت جدید</a>
-<a href="{% url 'my_appointments' %}" class="btn btn-outline-primary">مشاهده نوبت‌های من</a>
+
+<div class="list-group">
+    <a href="{% url 'create_appointment' %}" class="list-group-item list-group-item-action">📅 رزرو نوبت جدید</a>
+    <a href="{% url 'my_appointments' %}" class="list-group-item list-group-item-action">📝 مشاهده نوبت‌های من</a>
+    <a href="{% url 'blog_list' %}" class="list-group-item list-group-item-action">📰 مقالات بلاگ</a>
+    <a href="{% url 'doctor_list' %}" class="list-group-item list-group-item-action">👨‍⚕️ مشاهده لیست پزشکان</a>
+
+</div>
 {% endblock %}

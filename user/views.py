@@ -1,7 +1,8 @@
-from pyexpat.errors import messages
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserRegisterForm, DoctorRegisterForm, LoginForm ,DoctorAvailabilityForm
+from django.contrib import messages
 from .models import User ,DoctorAvailability
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
@@ -82,4 +83,17 @@ def doctor_availability(request):
     else:
         formset = AvailabilityFormSet(queryset=queryset)
 
-    return render(request, 'accounts/doctor_availability.html', {'formset': formset})
+    return render(request, 'user/doctor_availability.html', {'formset': formset})
+
+
+def doctor_list(request):
+    doctors = User.objects.filter(role='doctor', is_verified=True)
+    return render(request, 'user/doctor_list.html', {'doctors': doctors})
+
+def doctor_detail(request, doctor_id):
+    doctor = get_object_or_404(User, id=doctor_id, role='doctor', is_verified=True)
+    availabilities = DoctorAvailability.objects.filter(doctor=doctor)
+    return render(request, 'user/doctor_detail.html', {
+        'doctor': doctor,
+        'availabilities': availabilities,
+    })

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}نوبت‌های من{% endblock %}
+{% load jalali_tags %}
 
 {% block content %}
 <h3 class="mb-4">نوبت‌ها</h3>
@@ -24,8 +25,8 @@
                     {{ app.patient.full_name }}
                 {% endif %}
             </td>
-            <td>{{ app.date }}</td>
-            <td>{{ app.time }}</td>
+            <td>{{ app.date|to_jalali }}</td>
+            <td>{{ app.time|persian_time}}</td>
             <td>
                 {% if app.status == 'pending' %}<span class="text-warning">در انتظار</span>
                 {% elif app.status == 'confirmed' %}<span class="text-success">تأیید شده</span>

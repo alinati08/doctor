@@ -9,8 +9,8 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         fields = ['doctor', 'date', 'time', 'description']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'time': forms.TimeInput(attrs={'type': 'time'}),
+            'date': forms.TextInput(attrs={'id': 'id_date'}),  # مهم!
+            'time': forms.TextInput(attrs={'id': 'id_time'}),
         }
         labels = {
             'date': 'تاریخ',

@@ -5,7 +5,61 @@
 <h3 class="mb-4">فرم رزرو نوبت</h3>
 <form method="post" class="card card-body shadow-sm">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <div class="mb-3">
+        {{ form.doctor.label_tag }} {{ form.doctor }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.date.label_tag }} {{ form.date }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.time.label_tag }} {{ form.time }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.description.label_tag }} {{ form.description }}
+    </div>
+
     <button type="submit" class="btn btn-success">ثبت نوبت</button>
 </form>
+
+<script>
+    function toEnglishNumber(str) {
+        var persian = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g],
+            english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        for (var i = 0; i < 10; i++) {
+            str = str.replace(persian[i], english[i]);
+        }
+        return str;
+    }
+
+    $(document).ready(function () {
+        // تاریخ شمسی
+        $("#id_date").persianDatepicker({
+            format: 'YYYY-MM-DD',
+            autoClose: true,
+            initialValue: false,
+            observer: true,
+            onSelect: function () {
+                let val = $("#id_date").val();
+                $("#id_date").val(toEnglishNumber(val));
+            }
+        });
+
+        // ساعت فارسی
+        $("#id_time").persianDatepicker({
+            format: 'HH:mm',
+            autoClose: true,
+            initialValue: false,
+            observer: true,
+            onlyTimePicker: true,
+            onSelect: function () {
+                let val = $("#id_time").val();
+                $("#id_time").val(toEnglishNumber(val));
+            }
+        });
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}لیست پزشکان{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">پزشکان تایید شده</h2>
+
+<div class="row">
+  {% for doctor in doctors %}
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ doctor.full_name }}</h5>
+          <p class="card-text text-muted">تخصص: {{ doctor.specialty }}</p>
+          <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-outline-primary btn-sm">مشاهده پروفایل</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">هنوز هیچ پزشکی ثبت نشده یا تأیید نشده است.</p>
+  {% endfor %}
+</div>
+{% endblock %}

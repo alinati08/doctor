@@ -3,5 +3,9 @@
 
 {% block content %}
 <h2 class="mb-4">داشبورد پزشک</h2>
-<a href="{% url 'my_appointments' %}" class="btn btn-primary">مشاهده نوبت‌های بیماران</a>
+
+<div class="list-group">
+    <a href="{% url 'my_appointments' %}" class="list-group-item list-group-item-action">📋 مشاهده نوبت‌های بیماران</a>
+    <a href="{% url 'doctor_availability' %}" class="list-group-item list-group-item-action">🕒 تنظیم زمان‌های کاری</a>
+</div>
 {% endblock %}

@@ -9,4 +9,6 @@ urlpatterns = [
     path('داشبورد-کاربر/', views.user_dashboard, name='user_dashboard'),
     path('داشبورد-پزشک/', views.doctor_dashboard, name='doctor_dashboard'),
     path('تنظیم-زمان-کاری/', views.doctor_availability, name='doctor_availability'),
+    path('پزشکان/', views.doctor_list, name='doctor_list'),
+    path('پزشک/<int:doctor_id>/', views.doctor_detail, name='doctor_detail'),
 ]

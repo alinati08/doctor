@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>{% block title %}وبسایت نوبت‌دهی{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-date/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
 
     <!-- Bootstrap RTL CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
@@ -17,22 +21,28 @@
             margin-bottom: 30px;
         }
     </style>
+
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="/">نوبت آنلاین</a>
-        <div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="#">نوبت آنلاین</a>
+          <div>
             {% if user.is_authenticated %}
-                <span class="text-white me-3">{{ user.full_name }}</span>
-                <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">خروج</a>
+              <span class="text-white me-3">{{ user.full_name }}</span>
+              {% if user.role == 'user' %}
+                <a href="{% url 'user_dashboard' %}" class="btn btn-light btn-sm mx-1">🏠 داشبورد</a>
+              {% elif user.role == 'doctor' %}
+                <a href="{% url 'doctor_dashboard' %}" class="btn btn-light btn-sm mx-1">🏥 داشبورد پزشک</a>
+              {% endif %}
+              <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">خروج</a>
             {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">ورود</a>
+              <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">ورود</a>
             {% endif %}
+          </div>
         </div>
-    </div>
-</nav>
+      </nav>
 
 <div class="container">
     {% block content %}
