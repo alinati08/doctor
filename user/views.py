@@ -1,8 +1,10 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import UserRegisterForm, DoctorRegisterForm, LoginForm
-from .models import User
+from .forms import UserRegisterForm, DoctorRegisterForm, LoginForm ,DoctorAvailabilityForm
+from .models import User ,DoctorAvailability
 from django.contrib.auth.decorators import login_required
+from django.forms import modelformset_factory
 
 def register_user(request):
     if request.method == 'POST':
@@ -38,7 +40,10 @@ def login_view(request):
             login(request, user)
             if user.role == 'user':
                 return redirect('user_dashboard')
-            elif user.role == 'doctor':
+            if not user.is_verified and user.role == 'doctor':
+                messages.error(request, "اکانت شما هنوز توسط مدیریت تایید نشده است.")
+                return redirect('login')
+            elif user.is_verified and user.role == 'doctor':
                 return redirect('doctor_dashboard')
     else:
         form = LoginForm()
@@ -55,3 +60,26 @@ def doctor_dashboard(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def doctor_availability(request):
+    if request.user.role != 'doctor':
+        return redirect('login')
+
+    AvailabilityFormSet = modelformset_factory(DoctorAvailability, form=DoctorAvailabilityForm, extra=1, can_delete=True)
+    queryset = DoctorAvailability.objects.filter(doctor=request.user)
+
+    if request.method == 'POST':
+        formset = AvailabilityFormSet(request.POST, queryset=queryset)
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.doctor = request.user
+                instance.save()
+            formset.save()
+            messages.success(request, "زمان‌های کاری با موفقیت ذخیره شدند.")
+            return redirect('doctor_availability')
+    else:
+        formset = AvailabilityFormSet(queryset=queryset)
+
+    return render(request, 'accounts/doctor_availability.html', {'formset': formset})

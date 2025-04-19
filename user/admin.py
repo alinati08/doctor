@@ -3,10 +3,10 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ('phone', 'full_name', 'role', 'is_active')
+    list_display = ('phone', 'full_name', 'role', 'is_active' , 'is_verified')
     fieldsets = (
         (None, {'fields': ('phone', 'password')}),
-        ('اطلاعات شخصی', {'fields': ('full_name', 'email', 'role', 'medical_license', 'specialty')}),
+        ('اطلاعات شخصی', {'fields': ('full_name', 'email', 'role', 'medical_license', 'specialty', 'is_verified')}),
         ('دسترسی‌ها', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('گروه‌ها و مجوزها', {'fields': ('groups', 'user_permissions')}),
     )

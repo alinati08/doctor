@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}تنظیم زمان کاری{% endblock %}
+
+{% block content %}
+<h3>تنظیم زمان کاری</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class="table">
+        {% for form in formset %}
+            <tr>
+                <td>{{ form.day_of_week }}</td>
+                <td>{{ form.start_time }}</td>
+                <td>{{ form.end_time }}</td>
+                <td>{% if form.instance.pk %}{{ form.DELETE }} حذف{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <button type="submit" class="btn btn-success">ذخیره</button>
+</form>
+{% endblock %}

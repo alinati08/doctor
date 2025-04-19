@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ blog.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{ blog.title }}</h2>
+        <p class="text-muted">نویسنده: {{ blog.author.full_name }} | دسته‌بندی: {{ blog.category.title }}</p>
+        <hr>
+        {% if blog.image %}
+            <img src="{{ blog.image.url }}" class="img-fluid mb-4" alt="{{ blog.title }}">
+        {% endif %}
+        <div class="mb-4">
+            {{ blog.content|safe }}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="col-md-12">
+        <h5 class="mt-4 mb-3">نظرات</h5>
+        {% for comment in comments %}
+            <div class="border p-3 rounded mb-2">
+                <p><strong>{{ comment.name }}</strong> - {{ comment.date|date:"Y/m/d" }}</p>
+                <p>{{ comment.message }}</p>
+            </div>
+        {% empty %}
+            <p class="text-muted">نظری ثبت نشده است.</p>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 mt-4">
+        <h5>ارسال نظر جدید</h5>
+        <form method="post" class="card card-body shadow-sm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">ارسال نظر</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
