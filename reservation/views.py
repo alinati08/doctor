@@ -10,7 +10,6 @@ import jdatetime
 from datetime import date
 
 def convert_persian_to_gregorian(persian_str):
-    # تبدیل اعداد فارسی به انگلیسی
     persian_str = ''.join([str("۰۱۲۳۴۵۶۷۸۹".index(c)) if c in "۰۱۲۳۴۵۶۷۸۹" else c for c in persian_str])
     year, month, day = map(int, persian_str.split('-'))
     j_date = jdatetime.date(year, month, day)
@@ -24,11 +23,8 @@ def create_appointment(request):
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.patient = request.user
-
-            # تبدیل تاریخ شمسی به میلادی
             persian_date_str = request.POST.get('date')
             appointment.date = convert_persian_to_gregorian(persian_date_str)
-
             appointment.save()
             return redirect('my_appointments')
     else:

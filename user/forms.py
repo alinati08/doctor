@@ -15,6 +15,9 @@ class DoctorRegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['phone', 'full_name', 'email', 'password', 'medical_license', 'specialty']
+        labels = {
+            'specialty': 'تخصص',
+        }
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="شماره تلفن")

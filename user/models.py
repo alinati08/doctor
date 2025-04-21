@@ -1,6 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+class MedicalMajor(models.Model):
+    title = models.CharField("عنوان تخصص", max_length=100)
+
+    class Meta:
+        verbose_name = 'تخصص'
+        verbose_name_plural = 'تخصص‌ها'
+
+    def __str__(self):
+        return self.title
+
+
+
 class UserManager(BaseUserManager):
     def create_user(self, phone, password=None, **extra_fields):
         if not phone:
@@ -28,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     # Fields for doctors only
     medical_license = models.CharField(max_length=100, blank=True, null=True, verbose_name="شماره نظام پزشکی")
-    specialty = models.CharField(max_length=100, blank=True, null=True, verbose_name="تخصص")
+    specialty = models.ForeignKey(MedicalMajor, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="تخصص")
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -70,3 +82,5 @@ class DoctorAvailability(models.Model):
 
     def __str__(self):
         return f"{self.doctor.full_name} - {self.day_of_week} ({self.start_time} تا {self.end_time})"
+    
+    

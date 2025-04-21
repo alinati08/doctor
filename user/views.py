@@ -87,9 +87,16 @@ def doctor_availability(request):
 
 
 def doctor_list(request):
+    query = request.GET.get('q')
     doctors = User.objects.filter(role='doctor', is_verified=True)
-    return render(request, 'user/doctor_list.html', {'doctors': doctors})
 
+    if query:
+        doctors = doctors.filter(full_name__icontains=query)
+
+    return render(request, 'user/doctor_list.html', {
+        'doctors': doctors,
+        'query': query,
+    })
 def doctor_detail(request, doctor_id):
     doctor = get_object_or_404(User, id=doctor_id, role='doctor', is_verified=True)
     availabilities = DoctorAvailability.objects.filter(doctor=doctor)

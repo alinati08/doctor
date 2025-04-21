@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User
+from .models import User ,MedicalMajor
 
 class UserAdmin(BaseUserAdmin):
     list_display = ('phone', 'full_name', 'role', 'is_active' , 'is_verified')
@@ -19,6 +19,7 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('phone',)
 
 admin.site.register(User, UserAdmin)
+admin.site.register(MedicalMajor)
 admin.site.site_header = 'مدیریت سایت'
 admin.site.site_title = 'پنل ادمین'
 admin.site.index_title = 'به پنل مدیریت خوش آمدید'
