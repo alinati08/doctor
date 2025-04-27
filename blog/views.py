@@ -1,4 +1,4 @@
-from django.shortcuts import render 
+from django.shortcuts import get_object_or_404, redirect, render 
 from .models import Blog , Comments
 from .forms import CommentForm
 from django.core.paginator import Paginator
@@ -15,24 +15,24 @@ def blog_list(request):
     
     return render(request,"blog/blog_list.html" ,context)
 
-def blog_detail(request,id):
-    blog= Blog.objects.get(id=id)
-   
-    comments=Comments.objects.all().filter(blog=blog)
-    
+def blog_detail(request, id):
+    blog = get_object_or_404(Blog, id=id)
+    comments = Comments.objects.filter(blog=blog)
+    form = CommentForm()
+
     if request.method == "POST":
-        form=CommentForm(request.POST)
+        form = CommentForm(request.POST)
         if form.is_valid():
-            new_name=form.cleaned_data['name']
-            new_email=form.cleaned_data['email']
-            new_message=form.cleaned_data['message']
-        
-            new_comment=Comments(blog=blog,name=new_name,email=new_email, message=new_message)
+            new_comment = form.save(commit=False)
+            new_comment.blog = blog  # اتصال کامنت به بلاگ
             new_comment.save()
-    context={
-        "blog":blog ,
-        # "recents":recents ,
-        "comments":comments ,
+            return redirect('blog_detail', id=blog.id)  # ری‌دایرکت بعد از ثبت موفق
+
+    context = {
+        'blog': blog,
+        'comments': comments,
+        'form': form,
     }
+    return render(request, 'blog/blog_detail.html', context)
     
     return render(request,"blog/blog_detail.html",context)

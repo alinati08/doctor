@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import User ,DoctorAvailability
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
+from django.forms import formset_factory
 
 def register_user(request):
     if request.method == 'POST':
@@ -67,24 +68,42 @@ def doctor_availability(request):
     if request.user.role != 'doctor':
         return redirect('login')
 
-    AvailabilityFormSet = modelformset_factory(DoctorAvailability, form=DoctorAvailabilityForm, extra=1, can_delete=True)
-    queryset = DoctorAvailability.objects.filter(doctor=request.user)
+    AvailabilityFormSet = formset_factory(DoctorAvailabilityForm, extra=6, can_delete=True)
 
     if request.method == 'POST':
-        formset = AvailabilityFormSet(request.POST, queryset=queryset)
+        formset = AvailabilityFormSet(request.POST)
         if formset.is_valid():
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.doctor = request.user
-                instance.save()
-            formset.save()
+            DoctorAvailability.objects.filter(doctor=request.user).delete()
+
+            for form in formset:
+                if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+                    day_of_week = form.cleaned_data['day_of_week']
+                    start_time = form.cleaned_data['start_time']
+                    end_time = form.cleaned_data['end_time']
+
+                    DoctorAvailability.objects.create(
+                        doctor=request.user,
+                        day_of_week=day_of_week,
+                        start_time=start_time,
+                        end_time=end_time,
+                    )
             messages.success(request, "زمان‌های کاری با موفقیت ذخیره شدند.")
             return redirect('doctor_availability')
+        else:
+            print("Formset Errors:", formset.errors)
     else:
-        formset = AvailabilityFormSet(queryset=queryset)
+        availabilities = DoctorAvailability.objects.filter(doctor=request.user)
+        initial_data = [
+            {
+                'day_of_week': a.day_of_week,
+                'start_time': a.start_time,
+                'end_time': a.end_time,
+            }
+            for a in availabilities
+        ]
+        formset = AvailabilityFormSet(initial=initial_data)
 
     return render(request, 'user/doctor_availability.html', {'formset': formset})
-
 
 def doctor_list(request):
     query = request.GET.get('q')
@@ -100,6 +119,7 @@ def doctor_list(request):
 def doctor_detail(request, doctor_id):
     doctor = get_object_or_404(User, id=doctor_id, role='doctor', is_verified=True)
     availabilities = DoctorAvailability.objects.filter(doctor=doctor)
+    print(availabilities)
     return render(request, 'user/doctor_detail.html', {
         'doctor': doctor,
         'availabilities': availabilities,

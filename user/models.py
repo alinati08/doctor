@@ -10,9 +10,7 @@ class MedicalMajor(models.Model):
 
     def __str__(self):
         return self.title
-
-
-
+    
 class UserManager(BaseUserManager):
     def create_user(self, phone, password=None, **extra_fields):
         if not phone:
@@ -26,28 +24,24 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(phone, password, **extra_fields)
+    
+    
 
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('user', 'کاربر'),
         ('doctor', 'پزشک'),
     )
-    
     phone = models.CharField(max_length=11, unique=True, verbose_name="شماره تلفن")
     full_name = models.CharField(max_length=100, verbose_name="نام و نام خانوادگی")
     email = models.EmailField(null=True, blank=True, verbose_name="ایمیل")
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user', verbose_name="نقش")
-    
-    # Fields for doctors only
     medical_license = models.CharField(max_length=100, blank=True, null=True, verbose_name="شماره نظام پزشکی")
     specialty = models.ForeignKey(MedicalMajor, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="تخصص")
-
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False, verbose_name="تایید شده توسط ادمین")
-
     objects = UserManager()
-
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['full_name']
 
@@ -57,6 +51,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'کاربر'
         verbose_name_plural = 'کاربران'
+        
+        
         
 class DoctorAvailability(models.Model):
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'doctor'}, verbose_name="پزشک")
